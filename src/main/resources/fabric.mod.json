@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "fakesb",
+  "version": "${version}",
+  "name": "Fake Scoreboard",
+  "description": "Lokalnie zmienia wyswietlane wartosci na scoreboardzie (tylko wizualnie) z animowanym GUI.",
+  "authors": ["you"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["dev.fakesb.FakeSbClient"]
+  },
+  "mixins": ["fakescoreboard.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.18.1",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

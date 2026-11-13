@@ -3,9 +3,7 @@ name: Build Mod
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
   workflow_dispatch:
 
 permissions:
@@ -16,23 +14,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up JDK 21
+      - name: Setup JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
           distribution: temurin
+          java-version: '25'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Build
+        run: gradle build
 
-      - name: Upload mod JAR
+      - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
-          name: fakeScoreboard
+          name: Minecraft-Mod-1.21.11
           path: build/libs/*.jar

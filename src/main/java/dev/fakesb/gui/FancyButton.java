@@ -4,7 +4,6 @@ package dev.fakesb.gui;
 import dev.fakesb.ModConfig;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.function.BooleanSupplier;
@@ -22,8 +21,8 @@ public class FancyButton extends ButtonWidget {
             int y,
             int w,
             int h,
-            Text msg,
-            PressAction onPress
+            net.minecraft.text.Text msg,
+            ButtonWidget.PressAction onPress
     ) {
         super(x, y, w, h, msg, onPress, DEFAULT_NARRATION_SUPPLIER);
     }
@@ -47,7 +46,11 @@ public class FancyButton extends ButtonWidget {
     ) {
         long now = System.nanoTime();
 
-        float dt = Math.min((now - last) / 1e9f, 0.1f);
+        float dt = Math.min(
+                (now - last) / 1e9f,
+                0.1f
+        );
+
         last = now;
 
         hover = MathHelper.clamp(
@@ -65,6 +68,7 @@ public class FancyButton extends ButtonWidget {
         int w = getWidth();
         int h = getHeight();
 
+        // Próbnik kolorów
         if (swatch >= 0) {
             int glow = (int) (hover * 2);
 
@@ -99,11 +103,13 @@ public class FancyButton extends ButtonWidget {
                 Math.max(hover, on ? 0.6f : 0f)
         );
 
+        // Tło
         context.fill(
                 x, y, x + w, y + h,
                 Gfx.argb(alpha, bg)
         );
 
+        // Obramowanie
         drawOutline(
                 context,
                 x,
@@ -113,6 +119,7 @@ public class FancyButton extends ButtonWidget {
                 Gfx.argb(alpha, border)
         );
 
+        // Pasek aktywnego przycisku
         if (on) {
             context.fill(
                     x,
@@ -122,18 +129,6 @@ public class FancyButton extends ButtonWidget {
                     Gfx.argb(alpha, acc)
             );
         }
-
-        context.drawCenteredTextWithShadow(
-                net.minecraft.client.MinecraftClient
-                        .getInstance().textRenderer,
-                getMessage(),
-                x + w / 2,
-                y + (h - 8) / 2,
-                Gfx.argb(
-                        alpha,
-                        Gfx.mix(0xDDDDDD, 0xFFFFFF, hover)
-                )
-        );
     }
 
     private void drawOutline(
@@ -144,23 +139,27 @@ public class FancyButton extends ButtonWidget {
             int height,
             int color
     ) {
-        context.fill(x, y, x + width, y + 1, color);
-
         context.fill(
-                x,
-                y + height - 1,
-                x + width,
-                y + height,
+                x, y,
+                x + width, y + 1,
                 color
         );
 
-        context.fill(x, y, x + 1, y + height, color);
+        context.fill(
+                x, y + height - 1,
+                x + width, y + height,
+                color
+        );
 
         context.fill(
-                x + width - 1,
-                y,
-                x + width,
-                y + height,
+                x, y,
+                x + 1, y + height,
+                color
+        );
+
+        context.fill(
+                x + width - 1, y,
+                x + width, y + height,
                 color
         );
     }

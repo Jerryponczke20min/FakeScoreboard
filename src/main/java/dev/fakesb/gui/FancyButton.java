@@ -10,13 +10,21 @@ import net.minecraft.util.math.MathHelper;
 import java.util.function.BooleanSupplier;
 
 public class FancyButton extends ButtonWidget {
+
     private float hover;
     private long last = System.nanoTime();
 
     private BooleanSupplier lit = () -> false;
     private int swatch = -1;
 
-    public FancyButton(int x, int y, int w, int h, Text msg, PressAction onPress) {
+    public FancyButton(
+            int x,
+            int y,
+            int w,
+            int h,
+            Text msg,
+            PressAction onPress
+    ) {
         super(x, y, w, h, msg, onPress, DEFAULT_NARRATION_SUPPLIER);
     }
 
@@ -31,8 +39,14 @@ public class FancyButton extends ButtonWidget {
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    protected void drawIcon(
+            DrawContext context,
+            int mouseX,
+            int mouseY,
+            float delta
+    ) {
         long now = System.nanoTime();
+
         float dt = Math.min((now - last) / 1e9f, 0.1f);
         last = now;
 
@@ -45,21 +59,28 @@ public class FancyButton extends ButtonWidget {
         float alpha = getAlpha();
 
         int acc = ModConfig.accentRgb();
+
         int x = getX();
         int y = getY();
         int w = getWidth();
         int h = getHeight();
 
         if (swatch >= 0) {
-            int g = (int) (hover * 2);
+            int glow = (int) (hover * 2);
 
             context.fill(
                     x, y, x + w, y + h,
                     Gfx.argb(alpha, swatch)
             );
 
-            drawOutline(context, x - g, y - g, w + g * 2, h + g * 2,
-                    Gfx.argb(alpha, 0xFFFFFF));
+            drawOutline(
+                    context,
+                    x - glow,
+                    y - glow,
+                    w + glow * 2,
+                    h + glow * 2,
+                    Gfx.argb(alpha, 0xFFFFFF)
+            );
 
             return;
         }
@@ -83,22 +104,35 @@ public class FancyButton extends ButtonWidget {
                 Gfx.argb(alpha, bg)
         );
 
-        drawOutline(context, x, y, w, h,
-                Gfx.argb(alpha, border));
+        drawOutline(
+                context,
+                x,
+                y,
+                w,
+                h,
+                Gfx.argb(alpha, border)
+        );
 
         if (on) {
             context.fill(
-                    x, y, x + 2, y + h,
+                    x,
+                    y,
+                    x + 2,
+                    y + h,
                     Gfx.argb(alpha, acc)
             );
         }
 
         context.drawCenteredTextWithShadow(
-                net.minecraft.client.MinecraftClient.getInstance().textRenderer,
+                net.minecraft.client.MinecraftClient
+                        .getInstance().textRenderer,
                 getMessage(),
                 x + w / 2,
                 y + (h - 8) / 2,
-                Gfx.argb(alpha, Gfx.mix(0xDDDDDD, 0xFFFFFF, hover))
+                Gfx.argb(
+                        alpha,
+                        Gfx.mix(0xDDDDDD, 0xFFFFFF, hover)
+                )
         );
     }
 
@@ -111,8 +145,23 @@ public class FancyButton extends ButtonWidget {
             int color
     ) {
         context.fill(x, y, x + width, y + 1, color);
-        context.fill(x, y + height - 1, x + width, y + height, color);
+
+        context.fill(
+                x,
+                y + height - 1,
+                x + width,
+                y + height,
+                color
+        );
+
         context.fill(x, y, x + 1, y + height, color);
-        context.fill(x + width - 1, y, x + width, y + height, color);
+
+        context.fill(
+                x + width - 1,
+                y,
+                x + width,
+                y + height,
+                color
+        );
     }
 }
